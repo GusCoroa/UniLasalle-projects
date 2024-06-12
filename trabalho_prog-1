@@ -1,0 +1,316 @@
+Trabalho de Programação I – Prof. Lauro Víctor
+Este trabalho consiste em modelar e implementar um gerenciador de uma loja
+de roupas. Leia atentamente o enunciado do problema, identifique os
+elementos do sistema e cumpra as etapas abaixo.
+
+Enunciado do Problema
+Uma camisaria precisa controlar suas vendas, entender seu consumidor e
+realizar algumas consultas. Para isso, você foi contratado para desenvolver a
+primeira versão de um software gerenciador dessa loja.
+Etapas
+
+1. Fazer o cadastro de 5 vendas
+Cada venda pode possuir uma ou mais camisas, todas de mesmo tamanho.
+Cada venda é representada pelo valor do total da venda, quantidade de camisas
+vendidos, código de venda (número inteiro que precisa ser único), tamanho da
+camisa (P, M ou G) e tipo de venda (número inteiro de 1 a 5). As informações
+serão salvas em vetores (cada vetor deve possuir 5 posições).
+• Preencher as informações de cada pedido.
+• Impedir o cadastro de valores negativos e informar este erro.
+• Impedir o cadastro de um código de venda já cadastrado.
+• Impedir o cadastro quando o tamanho da camisa for inválido (diferente
+das opções) e informar este erro.
+• Impedir o cadastro quando o código for inválido (para ser válido tem que
+ser de 1 a 5) e informar este erro.
+• Informar que foi cadastrado com sucesso caso não aconteça nenhum erro
+e alocar as informações em vetores.
+Após o término do cadastro dos 5 pedidos o programa irá automaticamente
+exibir o menu principal.
+
+2. Criar o menu principal
+Você deve fazer um menu pedindo para o usuário escolher ver informação das
+vendas pedidos baseados no código único ou ver informação de todos os
+pedidos cadastrados.
+
+3. Pesquisar um pedido
+• Você deve pedir o código único que deseja pesquisar.
+• Informar todos os dados da venda com o código único.
+
+• Caso não encontre o código deve-se informar que não há vendas com
+aquele código.
+• Após exibir a informação da venda ou a informação que não encontrou,
+perguntar se o usuário deseja retornar ao menu principal. Caso queira,
+apresente o menu, senão encerre o programa.
+
+4. Ver informações de todas as vendas
+Você deve:
+• Pedir um valor ao usuário que será usado para exibir a quantidade de
+vendas abaixo deste valor.
+• Exibir a quantidade de vendas acima de 100 reais.
+• Exibir a quantidade vendida de camisas de tamanho G.
+• Exibir o valor total vendido de camisa de tamanho P.
+• Exibir o valor médio de uma venda.
+• Exibir a quantidade total de camisas vendidas.
+• Exibir o valor total de vendas quando o tipo de venda for ímpar.
+• Exibir o tipo de venda que foi mais vendido (havendo empate exibir
+qualquer tipo de venda dentre os mais vendidos).
+• Perguntar se o usuário deseja retornar ao menu principal. Caso queira,
+apresente o menu, senão encerre o programa.
+
+
+---------------------------------INICIO DE CODIGO-------------------------------------------------------
+
+#include <stdio.h>
+
+int main(void) {
+
+  int codigo[5];       // vetor pra armazenar os codigos
+  float valorTotal[5]; // vetor pra armanezar o valor total de cada venda
+  float media[5];      // vetor pra armazenar o valor medio de cada venda
+  char tamanho[5];     // vetor pra armazenar tamanho das camisas
+  int tipo[5];         // vetor pra armazenar o tipo de cada venda
+  int qtdCamisas[5];   // vetor pra armazenar quantidade de camisas por venda
+  int qtdTotalCamisas =
+      0;                 // todas as camisas vendidas de todos os vetores juntos
+  int bloqueador = 0;    // bloquear codigo caso nao cumpra os requisitos
+  char respostaMenu = 0; // se quer ou nao retornar ao menu
+  char respostaPesquisa = 0; // se quer ou nao pesquisar por codigo
+  int busca = 0;             // um buscador pra pesquisa por codigo
+  int qtdAcima = 0;      // acumulador pra quantidades de numeros acima de 100
+  int qtdP = 0;          // quantidade de camisas P
+  float valorTotalP = 0; // valor total de camisas P
+  int qtdM = 0;          // quantidade de camisas M
+  int qtdG = 0;          // quantidade de camisas G
+  int maisVendido = 0;   // definir o mais vendido
+  int qtdTipo1 = 0;
+  int qtdTipo2 = 0;
+  int qtdTipo3 = 0;
+  int qtdTipo4 = 0;
+  int qtdTipo5 = 0;
+
+  for (int i = 0; i < 5; i++) {
+
+    // verificaçao do valor total
+    printf("\nDigite a quantidade de camisas: ");
+    scanf("%d", &qtdCamisas[i]);
+    printf("\ndigite o valor total da venda: ");
+    scanf("%f", &valorTotal[i]);
+
+    if (qtdCamisas[i] > 0) {
+      qtdTotalCamisas = qtdTotalCamisas + qtdCamisas[i];
+    }
+
+    if (valorTotal[i] < 0 || qtdCamisas[i] < 0) {
+      printf("Valor invalido. Tente novamente");
+      i = 5;
+      bloqueador = i;
+    } else {
+      // verificação do codigo
+
+      media[i] = valorTotal[i] / qtdCamisas[i];
+
+      printf("O valor medio da venda é de: %.2f", media[i]);
+      if (valorTotal[i] > 100) {
+        qtdAcima++;
+      }
+
+      printf("\ndigite um codigo: ");
+      scanf("%d", &codigo[i]);
+      if (codigo[i] == codigo[i - 1] || codigo[i] == codigo[i - 2] ||
+          codigo[i] == codigo[i - 3] || codigo[i] == codigo[i - 4]) {
+        printf("Codigo ja cadastrado, tente novamente");
+        i = 5;
+        bloqueador = i;
+      } else {
+        printf("\ndigite o tamanho da camisa: ");
+        scanf(" %c", &tamanho[i]);
+
+        switch (tamanho[i]) {
+        case 'p':
+          qtdP = qtdP + qtdCamisas[i];
+          valorTotalP = valorTotalP + (valorTotal[i] * qtdCamisas[i]);
+          break;
+        case 'm':
+          qtdM = qtdM + qtdCamisas[i];
+          break;
+        case 'g':
+          qtdG = qtdG + qtdCamisas[i];
+        }
+
+        switch (tamanho[i]) {
+        case 'p':
+          printf("\nTamanho %c escolhido", tamanho[i]);
+          break;
+        case 'm':
+          printf("\nTamanho %c escolhido", tamanho[i]);
+          break;
+        case 'g':
+          printf("\nTamanho %c escolhido", tamanho[i]);
+          break;
+        default:
+          printf("Opção de tamanho invalida.\n");
+          i = 5;
+          bloqueador = i;
+        }
+        if (i == 5) {
+          printf("\nTente novamente");
+        } else {
+          printf("\nInforme o tipo de venda: ");
+          scanf("%d", &tipo[i]);
+
+          switch (tipo[i]) {
+          case 1:
+            qtdTipo1++;
+            if (qtdTipo1 > maisVendido) {
+              maisVendido = tipo[i];
+            }
+            break;
+          case 2:
+            qtdTipo2++;
+            if (qtdTipo2 > maisVendido) {
+              maisVendido = tipo[i];
+            }
+            break;
+          case 3:
+            qtdTipo3++;
+            if (qtdTipo3 > maisVendido) {
+              maisVendido = tipo[i];
+            }
+            break;
+          case 4:
+            qtdTipo4++;
+            if (qtdTipo4 > maisVendido) {
+              maisVendido = tipo[i];
+            }
+            break;
+          case 5:
+            qtdTipo5++;
+            if (qtdTipo5 > maisVendido) {
+              maisVendido = tipo[i];
+            }
+          }
+
+          if (tipo[i] <= 5 && tipo[i] >= 1) {
+            if (tipo[i] % 2 != 0) {
+              printf("Valor total de vendas: %.2f", valorTotal[i]);
+            }
+
+            printf("\nCadastro concluido com sucesso!\n");
+          } else {
+            printf("\nTipo invalido. Tente novamente");
+            i = 5;
+            bloqueador = i;
+          }
+        }
+      }
+    }
+  }
+
+  if (bloqueador == 5) {
+    printf("\nConclua os requisitos de cadastro apropriadamente\n");
+  } else {
+
+    do {
+
+      printf("\nDeseja  ver informação das  vendas pedidos baseados no código "
+             "único?(s para sim, n para não) ");
+      scanf(" %c", &respostaPesquisa);
+
+      switch (respostaPesquisa) {
+      case 's':
+        printf("Digite o codigo a ser buscado: ");
+        scanf("%d", &busca);
+
+        if (busca == codigo[0]) {
+          // vetor 0
+          printf("\nCodigo %d\n", codigo[0]);
+          printf("Quantidade de camisas: %d\n", qtdCamisas[0]);
+          printf("Valor Total do pedido: %.2f\n", valorTotal[0]);
+          printf("Tamanho de camisa selecionado: %c\n", tamanho[0]);
+          printf("Tipo de venda: %d\n", tipo[0]);
+        }
+        if (busca == codigo[1]) {
+          // vetor 1
+          printf("\nCodigo %d\n", codigo[1]);
+          printf("Quantidade de camisas: %d\n", qtdCamisas[1]);
+          printf("Valor Total do pedido: %.2f\n", valorTotal[1]);
+          printf("Tamanho de camisa selecionado: %c\n", tamanho[1]);
+          printf("Tipo de venda: %d\n", tipo[1]);
+        }
+        if (busca == codigo[2]) {
+          // vetor 2
+          printf("\nCodigo %d\n", codigo[2]);
+          printf("Quantidade de camisas: %d\n", qtdCamisas[2]);
+          printf("Valor Total do pedido: %.2f\n", valorTotal[2]);
+          printf("Tamanho de camisa selecionado: %c\n", tamanho[2]);
+          printf("Tipo de venda: %d\n", tipo[2]);
+        }
+        if (busca == codigo[3]) {
+          // vetor 3
+          printf("\nCodigo %d\n", codigo[3]);
+          printf("Quantidade de camisas: %d\n", qtdCamisas[3]);
+          printf("Valor Total do pedido: %.2f\n", valorTotal[3]);
+          printf("Tamanho de camisa selecionado: %c\n", tamanho[3]);
+          printf("Tipo de venda: %d\n", tipo[3]);
+        }
+        if (busca == codigo[4]) {
+          // vetor 4
+          printf("\nCodigo %d\n", codigo[4]);
+          printf("Quantidade de camisas: %d\n", qtdCamisas[4]);
+          printf("Valor Total do pedido: %.2f\n", valorTotal[4]);
+          printf("Tamanho de camisa selecionado: %c\n", tamanho[4]);
+          printf("Tipo de venda: %d\n", tipo[4]);
+        }
+        break;
+      case 'n':
+        printf("\nAqui estao todos os dados de todos os pedidos\n");
+        // vetor 0
+        printf("\nCodigo %d\n", codigo[0]);
+        printf("Quantidade de camisas: %d\n", qtdCamisas[0]);
+        printf("Valor Total do pedido: %.2f\n", valorTotal[0]);
+        printf("Tamanho de camisa selecionado: %c\n", tamanho[0]);
+        printf("Tipo de venda: %d\n", tipo[0]);
+        // vetor 1
+        printf("\nCodigo %d\n", codigo[1]);
+        printf("Quantidade de camisas: %d\n", qtdCamisas[1]);
+        printf("Valor Total do pedido: %.2f\n", valorTotal[1]);
+        printf("Tamanho de camisa selecionado: %c\n", tamanho[1]);
+        printf("Tipo de venda: %d\n", tipo[1]);
+        // vetor 2
+        printf("\nCodigo %d\n", codigo[2]);
+        printf("Quantidade de camisas: %d\n", qtdCamisas[2]);
+        printf("Valor Total do pedido: %.2f\n", valorTotal[2]);
+        printf("Tamanho de camisa selecionado: %c\n", tamanho[2]);
+        printf("Tipo de venda: %d\n", tipo[2]);
+        // vetor 3
+        printf("\nCodigo %d\n", codigo[3]);
+        printf("Quantidade de camisas: %d\n", qtdCamisas[3]);
+        printf("Valor Total do pedido: %.2f\n", valorTotal[3]);
+        printf("Tamanho de camisa selecionado: %c\n", tamanho[3]);
+        printf("Tipo de venda: %d\n", tipo[3]);
+        // vetor 4
+        printf("\nCodigo %d\n", codigo[4]);
+        printf("Quantidade de camisas: %d\n", qtdCamisas[4]);
+        printf("Valor Total do pedido: %.2f\n", valorTotal[4]);
+        printf("Tamanho de camisa selecionado: %c\n", tamanho[4]);
+        printf("Tipo de venda: %d\n", tipo[4]);
+        break;
+      default:
+        printf("Não há vendas referentes a esse codigo");
+      }
+
+      printf("O tipo mais vendido foi: %d", maisVendido);
+      printf("A quantidade total de camisas vendidas foi: %d", qtdTotalCamisas);
+      printf("O valor total de camisas P vendidas foi: %.2f", valorTotalP);
+      printf("A quantidade de camisas G vendidas é: %d", qtdG);
+      printf("A quantidade de vendas acima de R$100 é: %d", qtdAcima);
+
+      
+
+      printf("\nDeseja retornar ao menu principal? ");
+      scanf(" %c", &respostaMenu);
+    } while (respostaMenu == 's');
+  }
+
+  return 0;
+}
